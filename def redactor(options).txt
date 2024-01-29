@@ -85,3 +85,6 @@ options = RedactorOptions()
 input_folder = '/path/to/your/folder'  # Replace with the actual path to your folder
 
 redactor(options, input_folder)
+
+
+name_regex= re.compile(r"\b(?:Mr\./Ms\.|Mrs\.| DrI.)?\s?[A-Z][a-z]+\b")
