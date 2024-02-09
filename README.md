@@ -23,21 +23,3 @@ def find_phone_numbers(text):
 text = "You can call me at +1 (555) 123-4567 or 555-9876. My other number is 1234567890."
 phone_numbers = find_phone_numbers(text)
 print("Phone numbers found:", phone_numbers)
-
-
-
-
-
-
-(?:\+?\d[- (]*\d[- )]*\d[- )]*(?:\d[- )]*){10}
-
-import re
-
-def detect_phone_numbers(text):
-    phone_pattern = re.compile(r'\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}')
-    phone_numbers = phone_pattern.findall(text)
-    return phone_numbers
-
-text = "Here are some phone numbers: (123) 456-7890, 123 456 7890, 123-456-7890, 123.456.7890, 123456789012"
-phone_numbers = detect_phone_numbers(text)
-print(phone_numbers)
