@@ -1,3 +1,5 @@
+(?:\+?\d[- (]*\d[- )]*\d[- )]*(?:\d[- )]*){10}
+
 import re
 
 def detect_phone_numbers(text):
