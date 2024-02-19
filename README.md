@@ -1,25 +1,20 @@
-def extract_digits(s):
-    return ''.join(filter(str.isdigit, s))
+import pdfplumber
 
-def is_valid_phone_number(s):
-    digits = extract_digits(s)
-    return len(digits) >= 10
+def extract_tables_from_pdf(pdf_path):
+    tables = []
+    with pdfplumber.open(pdf_path) as pdf:
+        for page in pdf.pages:
+            page_tables = page.extract_tables()
+            tables.extend(page_tables)
+    return tables
 
-def find_phone_numbers(text):
-    numbers = []
-    current_number = ""
-    for char in text:
-        if char.isdigit() or char in ['+', '-', '(', ')', ' ']:
-            current_number += char
-        else:
-            if is_valid_phone_number(current_number):
-                numbers.append(current_number)
-            current_number = ""
-    if is_valid_phone_number(current_number):
-        numbers.append(current_number)
-    return numbers
+# Provide the path to your PDF file
+pdf_path = 'your_pdf_file.pdf'
 
-# Example usage:
-text = "You can call me at +1 (555) 123-4567 or 555-9876. My other number is 1234567890."
-phone_numbers = find_phone_numbers(text)
-print("Phone numbers found:", phone_numbers)
+# Extract all tables from the PDF
+all_tables = extract_tables_from_pdf(pdf_path)
+
+# Process the extracted tables as needed
+for table in all_tables:
+    for row in table:
+        print(row)
