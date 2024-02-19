@@ -1,90 +1,20 @@
-def redactor(options):
-    # This is the function that performs redaction.
+import pdfplumber
 
-    if sys.version_info < (3,):
-        if options.input_stream is None:
-            options.input_stream = open('input.pdf', 'rb')  # Set the input file path
-        if options.output_stream is None:
-            options.output_stream = open('output-redacted.pdf', 'wb')  # Set the output file path
-    else:
-        if options.input_stream is None:
-            options.input_stream = open('input.pdf', 'rb')  # Set the input file path
-        if options.output_stream is None:
-            options.output_stream = open('output-redacted.pdf', 'wb')  # Set the output file path
+def extract_tables_from_pdf(pdf_path):
+    tables = []
+    with pdfplumber.open(pdf_path) as pdf:
+        for page in pdf.pages:
+            page_tables = page.extract_tables()
+            tables.extend(page_tables)
+    return tables
 
-    # Rest of your redaction code...
+# Provide the path to your PDF file
+pdf_path = 'your_pdf_file.pdf'
 
-    # Close the file handles after redaction is complete
-    options.input_stream.close()
-    options.output_stream.close()
+# Extract all tables from the PDF
+all_tables = extract_tables_from_pdf(pdf_path)
 
-
-""" Next Approach"""
-
-import os
-
-class RedactorOptions:
-    def __init__(self):
-        self.input_stream = None
-        self.output_stream = None
-        self.content_filters = None  # Set this to your desired content filters
-
-def redactor(options):
-    # This is the function that performs redaction.
-
-    for input_file_path in options.input_files:
-        options.input_stream = open(input_file_path, 'rb')  # Set the input file path dynamically
-
-        output_file_path = f"{os.path.splitext(input_file_path)[0]}-redacted.pdf"
-        options.output_stream = open(output_file_path, 'wb')  # Set the output file path dynamically
-
-        # Rest of your redaction code...
-
-        # Close the file handles after redaction is complete
-        options.input_stream.close()
-        options.output_stream.close()
-
-# Example usage
-options = RedactorOptions()
-options.input_files = ['file1.pdf', 'file2.pdf', 'file3.pdf']  # List of input files in a folder
-
-redactor(options)
-
-
-""" Next Approach """
-
-import os
-
-class RedactorOptions:
-    def __init__(self):
-        self.input_stream = None
-        self.output_stream = None
-        self.content_filters = None  # Set this to your desired content filters
-
-def redactor(options, input_folder):
-    # This is the function that performs redaction.
-
-    # List all files in the specified folder
-    input_files = [f for f in os.listdir(input_folder) if f.lower().endswith('.pdf')]
-
-    for input_file in input_files:
-        input_file_path = os.path.join(input_folder, input_file)
-        options.input_stream = open(input_file_path, 'rb')  # Set the input file path dynamically
-
-        output_file_path = os.path.join(input_folder, f"{os.path.splitext(input_file)[0]}-redacted.pdf")
-        options.output_stream = open(output_file_path, 'wb')  # Set the output file path dynamically
-
-        # Rest of your redaction code...
-
-        # Close the file handles after redaction is complete
-        options.input_stream.close()
-        options.output_stream.close()
-
-# Example usage
-options = RedactorOptions()
-input_folder = '/path/to/your/folder'  # Replace with the actual path to your folder
-
-redactor(options, input_folder)
-
-
-name_regex= re.compile(r"\b(?:Mr\./Ms\.|Mrs\.| DrI.)?\s?[A-Z][a-z]+\b")
+# Process the extracted tables as needed
+for table in all_tables:
+    for row in table:
+        print(row)
